@@ -21,38 +21,42 @@ export default function BookDetailScreen() {
 
     fetchBook();
   }, [bookId]);
-
   const handleBorrow = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
     const userId = user.uid;
 
-    const borrowedBooksCollection = collection(db, 'borrowedBooks');
-    const borrowedBooksData = query(borrowedBooksCollection, where('userId', '==', userId));
-    const borrowedBooksSnapshot = await getDocs(borrowedBooksData);
-    if (borrowedBooksSnapshot.size >= 3) {
-      Alert.alert('Borrowing Limit Reached', 'You cannot borrow more than 3 books at a time.');
-      return;
-    }
-
-    const borrowedBookRef = doc(db, 'borrowedBooks', bookId);
     try {
       const borrowedBooksCollection = collection(db, 'borrowedBooks');
-      const borrowedBooksPage = query(borrowedBooksCollection, where('coverPage', '==', book.coverPage));
-      const borrowedBooksSnapshot = await getDocs(borrowedBooksPage);
-      if (borrowedBooksSnapshot.size > 0) {
-        Alert.alert('Already Booked, Please Return it First');
-      } else {
-        await setDoc(borrowedBookRef, {
-          ...book,
-          userId: userId,
-        });
-        Alert.alert('Success', 'Book borrowed successfully!');
+      const borrowedBooksQuery = query(borrowedBooksCollection, where('userId', '==', userId));
+      const borrowedBooksSnapshot = await getDocs(borrowedBooksQuery);
+
+      if (borrowedBooksSnapshot.size >= 3) {
+        Alert.alert('Borrowing Limit Reached', 'You cannot borrow more than 3 books at a time. Please return the previous books to borrow other.');
+        return;
       }
+
+      const borrowedBookRef = doc(db, 'borrowedBooks', `${userId}_${bookId}`);
+      const borrowedBookDoc = await getDoc(borrowedBookRef);
+
+      if (borrowedBookDoc.exists()) {
+        Alert.alert('Already Borrowed', 'You have already borrowed this book.');
+        return;
+      }
+
+      await setDoc(borrowedBookRef, {
+        ...book,
+        userId: userId,
+        borrowedAt: new Date(),
+        bookID: bookId,
+      });
+
+      Alert.alert('Success', 'Book borrowed successfully!');
     } catch (error) {
       Alert.alert('Error', 'Unable to borrow book. Please try again.');
     }
   };
+
 
   return (
     <View style={styles.container}>

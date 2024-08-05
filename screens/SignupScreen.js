@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -22,10 +22,14 @@ export default function SignupScreen() {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
-        navigation.navigate('Login');
+        Alert.alert('Success', 'User registered successfully');
+        setTimeout(() => {
+          navigation.navigate('Home');
+        }, 1000);
       })
       .catch((error) => {
-        Alert.alert('Sign Up Failed', 'Enter valid Email and password');
+        console.log(error); 
+        Alert.alert('Sign Up Failed', error.message);
       });
   };
 

@@ -33,7 +33,8 @@ function TabNavigator() {
       })}
     >
       <Tab.Screen
-        name="Home" component={BooksListScreen}
+        name="Home"
+        component={BooksListScreen}
         options={{
           headerShown: true,
           headerTitle: 'Home',
@@ -47,7 +48,8 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Borrowed" component={BorrowedScreen}
+        name="Borrowed"
+        component={BorrowedScreen}
         options={{
           headerShown: true,
           headerTitle: 'Borrowed',
@@ -69,12 +71,12 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const unsubscribeFromAuth = onAuthStateChanged(auth, (user) => {
+    const backFromAuth = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       if (authInitialize) setAuthInitialize(false);
     });
 
-    return () => unsubscribeFromAuth();
+    return () => backFromAuth();
   }, [authInitialize]);
 
   if (authInitialize) return null;
@@ -83,11 +85,14 @@ export default function App() {
     <NavigationContainer>
       {currentUser ? (
         <Stack.Navigator>
-
-          <Stack.Screen name="TabNavigator" component={TabNavigator}
-            options={{ headerShown: false }} />
-
-          <Stack.Screen name="Book Detail" component={BookDetailScreen}
+          <Stack.Screen
+            name="TabNavigator"
+            component={TabNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Book Detail"
+            component={BookDetailScreen}
             options={{
               headerShown: true,
               headerStyle: {
@@ -97,12 +102,13 @@ export default function App() {
               headerTitleStyle: {
                 fontWeight: 'bold',
               },
-            }} />
+            }}
+          />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator>
-          <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
-          <Stack.Screen name="Signup" component={SignupScreen} options={{headerShown: false}} />
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
       )}
     </NavigationContainer>

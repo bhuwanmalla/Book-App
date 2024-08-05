@@ -3,7 +3,7 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "Enter your API key",
+  apiKey: "AIzaSyD7hM1n965kzlQiE0LT0ChBTO7kX6XH91Y",
   authDomain: "advanced-react-book-app.firebaseapp.com",
   projectId: "advanced-react-book-app",
   storageBucket: "advanced-react-book-app.appspot.com",
@@ -16,5 +16,3 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 export { db, auth };
-
-// AIzaSyD7hM1n965kzlQiE0LT0ChBTO7kX6XH91Y
